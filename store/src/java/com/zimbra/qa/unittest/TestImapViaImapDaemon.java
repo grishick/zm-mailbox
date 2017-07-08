@@ -2,11 +2,11 @@ package com.zimbra.qa.unittest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
+import static org.junit.Assert.assertTrue;
+import java.io.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.zimbra.common.account.Key.CacheEntryBy;
 import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.localconfig.LocalConfig;
@@ -218,5 +218,13 @@ public class TestImapViaImapDaemon extends SharedImapTests {
         } catch (CommandFailedException cfe) {
             assertEquals("must be authenticated as admin with X-ZIMBRA auth mechanism", cfe.getError());
         }
+    }
+
+    @Test
+    public void testImapdStatFile() throws Exception {
+        File testFile = new File("/opt/zimbra/zmstat/imapd.csv");
+
+        assertTrue("imapd.csv file does not exists", testFile.exists());
+        assertTrue("imapd.csv file is empty", testFile.length()>0);
     }
 }
