@@ -39,6 +39,7 @@ public class ZInvite implements ToZJSONObject {
     private List<ZTimeZone> mTimeZones;
     private List<ZComponent> mComponents;
     private ZInviteType mType;
+    private String mId;
 
     public ZInvite() {
         mTimeZones = new ArrayList<ZTimeZone>();
@@ -55,6 +56,11 @@ public class ZInvite implements ToZJSONObject {
         for (Element compEl : e.listElements(MailConstants.E_INVITE_COMPONENT)) {
             mComponents.add(new ZComponent(compEl));
         }
+        mId = e.getAttribute(MailConstants.A_ID);
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public void setTimeZones(List<ZTimeZone> timeZones) {
@@ -116,6 +122,7 @@ public class ZInvite implements ToZJSONObject {
         zjo.put("type", mType.name());
         zjo.put("timezones", mTimeZones);
         zjo.put("components", mComponents);
+        zjo.put("id", mId);
         return zjo;
     }
 

@@ -68,6 +68,7 @@ public class ZCalendarItem implements ZItem, ToZJSONObject {
     private long mDate;
     private long mSize;
     private String mUID;
+    private final long metadataChangeDate; /* metadata &/or content last modified - millis since 1970-01-01 00:00 UTC */
     private List<ZInvite> mInvites;
 
     public ZCalendarItem(Element e) throws ServiceException {
@@ -78,6 +79,7 @@ public class ZCalendarItem implements ZItem, ToZJSONObject {
         mDate = e.getAttributeLong(MailConstants.A_DATE, 0);
         mFolderId = e.getAttribute(MailConstants.A_FOLDER, null);
         mSize = e.getAttributeLong(MailConstants.A_SIZE);
+        metadataChangeDate = e.getAttributeLong(MailConstants.A_CHANGE_DATE, 0) * 1000;
         mInvites = new ArrayList<ZInvite>();
         for (Element inviteEl : e.listElements(MailConstants.E_INVITE)) {
             mInvites.add(new ZInvite(inviteEl));
@@ -127,7 +129,7 @@ public class ZCalendarItem implements ZItem, ToZJSONObject {
     }
 
    @Override
-public ZJSONObject toZJSONObject() throws JSONException {
+   public ZJSONObject toZJSONObject() throws JSONException {
         ZJSONObject zjo = new ZJSONObject();
         zjo.put("id", mId);
         zjo.put("flags", mFlags);
@@ -137,6 +139,7 @@ public ZJSONObject toZJSONObject() throws JSONException {
         zjo.put("size", mSize);
         zjo.put("uid", mUID);
         zjo.put("invites", mInvites);
+        zjo.put("metaDataChangedDate", metadataChangeDate);
         return zjo;
     }
 
@@ -171,6 +174,10 @@ public ZJSONObject toZJSONObject() throws JSONException {
 
     public boolean isFlagged() {
         return hasFlags() && mFlags.indexOf(ZMessage.Flag.FLAGGED.getFlagChar()) != -1;
+    }
+
+    public long getMetaDataChangedDate() {
+        return metadataChangeDate;
     }
 
 }
